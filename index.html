@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Menu Panel Jasteb Faanzy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://files.catbox.moe/5bpqir.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden; /* Hindari scroll untuk efek penuh */
+        }
+
+        .menu-container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            overflow-y: auto;
+            z-index: 10; /* Pastikan elemen ini di atas animasi */
+            position: relative;
+        }
+
+        .menu-container button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-container button:hover {
+            transform: scale(1.05);
+        }
+
+        .fire {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(255,69,0,0.8) 70%, rgba(0,0,0,0) 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: flicker 1s infinite ease-in-out, rise 3s infinite ease-in-out;
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h2 id="menu-title">Pilih Panel Jasteb Anda</h2>
+        <div id="menu-buttons"></div>
+    </div>
+
+    <script>
+        // Konfigurasi menu untuk 20 menu
+        const menuConfig = [
+            { text: "Sopoo", url: "https://ramadhanmoon.nicohosting.my.id/sewafaanzy1/ultimate", password: "180", promptMessage: "Masukkan password untuk sopoo", successMessage: "Password benar! Anda akan diarahkan ke Panel jasteb.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "PT JASTEB 1", url: "https://ramadhanmoon.nicohosting.my.id/pt1faanzy/ultimate", password: "111", promptMessage: "Masukkan password untuk Pt Jasteb 1", successMessage: "Password benar! Anda akan diarahkan ke Panel Jasteb.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "PT JASTEB 2", url: "https://ramadhanmoon.nicohosting.my.id/pt2faanzy/ultimate", password: "amel", promptMessage: "Masukkan password untuk Pt Jasteb 1", successMessage: "Password benar! Anda akan diarahkan ke panel", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "PRIBADI FAAN", url: "https://ramadhanmoon.nicohosting.my.id/sewafaan2/ultimate", password: "faantek", promptMessage: "Masukkan password untuk Panel Faan", successMessage: "Password benar! Anda akan diarahkan ke Panel Jasteb.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "kosong", url: "Yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "kosong", url: "yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "kosong", url: "yahahha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "kosong", url: "yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
+            { text: "kosong", url: "yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
+            // Tambahkan menu lainnya... 
+        ];
+
+        const colors = [
+            "#e74c3c", "#2980b9", "#27ae60", "#f39c12", "#8e44ad", "#2c3e50", "#d35400", "#1abc9c", "#34495e", "#c0392b"
+        ];
+
+        const menuButtonsContainer = document.getElementById('menu-buttons');
+
+        menuConfig.forEach((menu, index) => {
+            const button = document.createElement('button');
+            button.textContent = menu.text;
+            button.style.backgroundColor = colors[index % colors.length];
+            button.onclick = () => checkPassword(menu);
+            menuButtonsContainer.appendChild(button);
+        });
+
+        function checkPassword(menu) {
+            const userPassword = prompt(menu.promptMessage);
+
+            if (userPassword === menu.password) {
+                showNotification(menu.successMessage, 'success');
+                setTimeout(() => {
+                    window.location.href = menu.url;
+                }, 1500);
+            } else {
+                showNotification(menu.errorMessage, 'error');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Fungsi untuk membuat elemen api
+        function createFire() {
+            const fire = document.createElement('div');
+            fire.className = 'fire';
+            fire.style.left = `${Math.random() * window.innerWidth}px`; // Posisi horizontal acak
+            fire.style.bottom = '0px'; // Mulai dari bawah layar
+            fire.style.animationDuration = `${Math.random() * 2 + 2}s`; // Durasi acak antara 2-4 detik
+            fire.style.width = `${Math.random() * 20 + 10}px`; // Lebar acak
+            fire.style.height = fire.style.width; // Tinggi sesuai lebar
+            document.body.appendChild(fire);
+
+            // Hapus elemen api setelah animasi selesai
+            setTimeout(() => {
+                fire.remove();
+            }, 4000);
+        }
+
+        // Interval untuk membuat api
+        setInterval(createFire, 200); // Tambah api baru setiap 200ms
+    </script>
+</body>
+</html>
