@@ -16,7 +16,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            overflow: hidden; /* Hindari scroll untuk efek penuh */
+            overflow: hidden;
         }
 
         .menu-container {
@@ -28,7 +28,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 90%;
             overflow-y: auto;
-            z-index: 10; /* Pastikan elemen ini di atas animasi */
+            z-index: 10;
             position: relative;
         }
 
@@ -47,6 +47,38 @@
 
         .menu-container button:hover {
             transform: scale(1.05);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 100; /* Pastikan di atas elemen lainnya */
+            display: flex;
+            gap: 10px;
+            animation: fadeOut 3s forwards;
+        }
+
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-20px); }
         }
 
         .fire {
@@ -101,7 +133,6 @@
             { text: "kosong", url: "yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
             // Tambahkan menu lainnya... 
         ];
-
         const colors = [
             "#e74c3c", "#2980b9", "#27ae60", "#f39c12", "#8e44ad", "#2c3e50", "#d35400", "#1abc9c", "#34495e", "#c0392b"
         ];
@@ -132,9 +163,7 @@
         function showNotification(message, type) {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <span>${message}</span>
-            `;
+            notification.textContent = message;
             document.body.appendChild(notification);
 
             setTimeout(() => {
@@ -142,25 +171,21 @@
             }, 3000);
         }
 
-        // Fungsi untuk membuat elemen api
         function createFire() {
             const fire = document.createElement('div');
             fire.className = 'fire';
-            fire.style.left = `${Math.random() * window.innerWidth}px`; // Posisi horizontal acak
-            fire.style.bottom = '0px'; // Mulai dari bawah layar
-            fire.style.animationDuration = `${Math.random() * 2 + 2}s`; // Durasi acak antara 2-4 detik
-            fire.style.width = `${Math.random() * 20 + 10}px`; // Lebar acak
-            fire.style.height = fire.style.width; // Tinggi sesuai lebar
+            fire.style.left = `${Math.random() * window.innerWidth}px`;
+            fire.style.bottom = '0px';
+            fire.style.animationDuration = `${Math.random() * 2 + 2}s`;
+            fire.style.width = `${Math.random() * 20 + 10}px`;
+            fire.style.height = fire.style.width;
             document.body.appendChild(fire);
-
-            // Hapus elemen api setelah animasi selesai
             setTimeout(() => {
                 fire.remove();
             }, 4000);
         }
 
-        // Interval untuk membuat api
-        setInterval(createFire, 200); // Tambah api baru setiap 200ms
+        setInterval(createFire, 200);
     </script>
 </body>
 </html>
