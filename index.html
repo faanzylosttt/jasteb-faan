@@ -7,15 +7,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
             background-image: url('https://files.catbox.moe/5bpqir.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
         }
 
@@ -26,8 +26,8 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            overflow-y: auto;
+            max-height: 80%; /* Maksimum tinggi kontainer */
+            overflow-y: auto; /* Scroll jika konten melebihi tinggi */
             z-index: 10;
             position: relative;
         }
@@ -57,8 +57,9 @@
             border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
-            z-index: 100; /* Pastikan di atas elemen lainnya */
+            z-index: 100;
             display: flex;
+            align-items: center;
             gap: 10px;
             animation: fadeOut 3s forwards;
         }
@@ -75,10 +76,72 @@
             border: 1px solid #f5c6cb;
         }
 
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .icon.success {
+            background-color: #28a745;
+        }
+
+        .icon.success::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            top: 3px;
+            left: 7px;
+            animation: checkmark 0.5s ease-in-out;
+        }
+
+        .icon.error {
+            background-color: #dc3545;
+        }
+
+        .icon.error::before,
+        .icon.error::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 2px;
+            background: white;
+            top: 9px;
+            left: 4px;
+            transform-origin: center;
+            animation: cross 0.5s ease-in-out;
+        }
+
+        .icon.error::before {
+            transform: rotate(45deg);
+        }
+
+        .icon.error::after {
+            transform: rotate(-45deg);
+        }
+
         @keyframes fadeOut {
             0% { opacity: 1; }
             80% { opacity: 1; }
             100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(45deg); }
+            50% { transform: scale(1.2) rotate(45deg); }
+            100% { transform: scale(1) rotate(45deg); }
+        }
+
+        @keyframes cross {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         .fire {
@@ -119,7 +182,7 @@
         <div id="menu-buttons"></div>
     </div>
 
-    <script>
+     <script>
         // Konfigurasi menu untuk 20 menu
         const menuConfig = [
             { text: "Sopoo", url: "https://ramadhanmoon.nicohosting.my.id/sewafaanzy1/ultimate", password: "180", promptMessage: "Masukkan password untuk sopoo", successMessage: "Password benar! Anda akan diarahkan ke Panel jasteb.", errorMessage: "Password salah! Silakan coba lagi." },
@@ -133,6 +196,7 @@
             { text: "kosong", url: "yahaha", password: "yanto1", promptMessage: "Masukkan password untuk Panel 2", successMessage: "Password benar! Anda akan diarahkan ke Panel 2.", errorMessage: "Password salah! Silakan coba lagi." },
             // Tambahkan menu lainnya... 
         ];
+
         const colors = [
             "#e74c3c", "#2980b9", "#27ae60", "#f39c12", "#8e44ad", "#2c3e50", "#d35400", "#1abc9c", "#34495e", "#c0392b"
         ];
@@ -163,7 +227,10 @@
         function showNotification(message, type) {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.textContent = message;
+            notification.innerHTML = `
+                <span class="icon ${type}"></span>
+                <span>${message}</span>
+            `;
             document.body.appendChild(notification);
 
             setTimeout(() => {
@@ -180,6 +247,7 @@
             fire.style.width = `${Math.random() * 20 + 10}px`;
             fire.style.height = fire.style.width;
             document.body.appendChild(fire);
+
             setTimeout(() => {
                 fire.remove();
             }, 4000);
