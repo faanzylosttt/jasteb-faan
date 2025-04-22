@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 PAYMENT FAANZY HOSTING 💸</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://files.catbox.moe/5bpqir.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow-y: auto;
+            color: white;
+        }
+
+        /* Payment Section */
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .important-note {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin-top: 20px;
+        }
+
+        /* Payment Methods */
+        .payment-method {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .payment-method:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Warna unik untuk setiap metode pembayaran */
+        .payment-method.dana {
+            background-color: rgba(30, 144, 255, 0.2); /* Biru untuk DANA */
+            border-color: rgba(30, 144, 255, 0.5);
+        }
+
+        .payment-method.gopay {
+            background-color: rgba(60, 179, 113, 0.2); /* Hijau untuk GOPAY */
+            border-color: rgba(60, 179, 113, 0.5);
+        }
+
+        .payment-method.ovo {
+            background-color: rgba(138, 43, 226, 0.2); /* Ungu untuk OVO */
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+
+        .payment-method.qris {
+            background-color: rgba(255, 165, 0, 0.2); /* Oranye untuk QRIS */
+            border-color: rgba(255, 165, 0, 0.5);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-content:hover {
+            transform: scale(1.05);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .download-button {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Success Notification */
+        .copy-notification {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #28a745;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        .checkmark {
+            width: 70px;
+            height: 70px;
+            display: inline-block;
+            stroke-width: 3;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            animation: checkmarkAnimation 0.5s ease-out forwards;
+        }
+
+        .checkmark-circle {
+            fill: none;
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            animation: drawCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            fill: none;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: drawCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            10%, 90% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes drawCircle {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes drawCheck {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes checkmarkAnimation {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Snow Animation */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1.5em;
+            animation: fall linear infinite;
+            z-index: 9999;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        @keyframes textRainbow {
+            0% { color: red; }
+            16% { color: orange; }
+            33% { color: yellow; }
+            50% { color: green; }
+            66% { color: blue; }
+            83% { color: indigo; }
+            100% { color: violet; }
+        }
+
+        .footer span {
+            animation: textRainbow 3s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Payment Section -->
+    <div class="overlay">
+        <div class="container">
+            <h1>PAYMENT FAANZY</h1>
+
+            <!-- Payment Methods -->
+            <div class="payment-method dana" onclick="copyText('082281704226')">
+                <span>💳 DANA: 082281704226 🏦</span>
+                <img src="https://files.catbox.moe/x1tw8u.jpeg" alt="DANA" style="width: 40px; height: 40px;">
+            </div>
+            <div class="payment-method gopay" onclick="copyText('082281704226')">
+                <span>💳 GOPAY: 082281704226 🚀✨</span>
+                <img src="https://files.catbox.moe/3gig7z.jpg" alt="Gopay" style="width: 40px; height: 40px;">
+            </div>
+            <div class="payment-method ovo" onclick="copyText('082281704226')">
+                <span>💳 OVO: 082281704226 🌟💎</span>
+                <img src="https://files.catbox.moe/pczy7t.jpg" alt="OVO" style="width: 40px; height: 40px;">
+            </div>
+            <div class="payment-method qris" onclick="openModal('https://files.catbox.moe/2ppy45.jpg')">
+                <span>📱 QRIS: Scan & Pay 📷💵</span>
+                <img src="https://files.catbox.moe/2ppy45.jpg" alt="QRIS" style="width: 40px; height: 40px;">
+            </div>
+
+            <!-- Important Note -->
+            <div class="important-note">
+                JANGAN LUPA UNTUK MENGIRIM BUKTI TRANSFER
+            </div>
+
+            <!-- Audio Player -->
+            <div style="margin-top: 30px;">
+                <h2>🎵 Lagu Favorit</h2>
+                <audio controls autoplay loop>
+                    <source src="https://files.catbox.moe/i2iv4x.mp3" type="audio/mpeg">
+                    Browser Anda tidak mendukung elemen audio.
+                </audio>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for QRIS -->
+    <div id="qrisModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" class="modal-content">
+        <a id="downloadQRIS" download="QRIS-Payment.jpg" class="download-button">💾 Download QRIS</a>
+    </div>
+
+    <!-- Success Notification -->
+    <div class="copy-notification" id="copyNotification">
+        <span class="checkmark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25"/>
+                <path class="checkmark-check" fill="none" d="M14 27l10 10L39 16"/>
+            </svg>
+        </span>
+        <p>Tersalin!</p>
+    </div>
+
+    <!-- Snowflakes -->
+    <div id="snowflakes"></div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <span>🌟 Website by Faanzy Market - Contact: 082281704226 🌟</span>
+    </div>
+
+    <script>
+        // Copy Text Function
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const copyNotification = document.getElementById('copyNotification');
+                copyNotification.style.display = 'flex';
+                setTimeout(() => {
+                    copyNotification.style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        // Modal Functions
+        function openModal(imageSrc) {
+            const modal = document.getElementById("qrisModal");
+            const modalImage = document.getElementById("modalImage");
+            const downloadLink = document.getElementById("downloadQRIS");
+            modal.style.display = "block";
+            modalImage.src = imageSrc;
+            downloadLink.href = imageSrc;
+        }
+
+        function closeModal() {
+            document.getElementById("qrisModal").style.display = "none";
+        }
+
+        // Snowflake Animation
+        function createSnowflakes() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            document.body.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        setInterval(createSnowflakes, 100);
+    </script>
+</body>
+</html>
