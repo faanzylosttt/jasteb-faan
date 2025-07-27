@@ -1,376 +1,253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 PAYMENT FAANZY HOSTING 💸</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://files.catbox.moe/5bpqir.jpg') no-repeat center center fixed;
-            background-size: cover;
-            overflow-y: auto;
-            color: white;
-        }
-
-        /* Payment Section */
-        .overlay {
-            background: rgba(0, 0, 0, 0.7);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .important-note {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #FFD700;
-            margin-top: 20px;
-        }
-
-        /* Payment Methods */
-        .payment-method {
-            margin: 15px 0;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-        }
-
-        .payment-method:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
-
-        /* Warna unik untuk setiap metode pembayaran */
-        .payment-method.dana {
-            background-color: rgba(30, 144, 255, 0.2); /* Biru untuk DANA */
-            border-color: rgba(30, 144, 255, 0.5);
-        }
-
-        .payment-method.gopay {
-            background-color: rgba(60, 179, 113, 0.2); /* Hijau untuk GOPAY */
-            border-color: rgba(60, 179, 113, 0.5);
-        }
-
-        .payment-method.ovo {
-            background-color: rgba(138, 43, 226, 0.2); /* Ungu untuk OVO */
-            border-color: rgba(138, 43, 226, 0.5);
-        }
-
-        .payment-method.qris {
-            background-color: rgba(255, 165, 0, 0.2); /* Oranye untuk QRIS */
-            border-color: rgba(255, 165, 0, 0.5);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-        }
-
-        .modal-content:hover {
-            transform: scale(1.05);
-        }
-
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .download-button {
-            display: block;
-            margin: 20px auto;
-            text-align: center;
-            color: white;
-            background-color: #007bff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .download-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Success Notification */
-        .copy-notification {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            background-color: #28a745;
-            color: white;
-            padding: 20px 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 999;
-            font-size: 1.2rem;
-            font-weight: bold;
-            animation: fadeInOut 3s ease-in-out;
-        }
-
-        .checkmark {
-            width: 70px;
-            height: 70px;
-            display: inline-block;
-            stroke-width: 3;
-            stroke: #fff;
-            stroke-miterlimit: 10;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-            animation: checkmarkAnimation 0.5s ease-out forwards;
-        }
-
-        .checkmark-circle {
-            fill: none;
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke-width: 3;
-            stroke-miterlimit: 10;
-            animation: drawCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-
-        .checkmark-check {
-            fill: none;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: drawCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.9);
-            }
-            10%, 90% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        @keyframes drawCircle {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        @keyframes drawCheck {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        @keyframes checkmarkAnimation {
-            0% {
-                transform: scale(0);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Snow Animation */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            color: white;
-            font-size: 1.5em;
-            animation: fall linear infinite;
-            z-index: 9999;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1rem;
-        }
-
-        @keyframes textRainbow {
-            0% { color: red; }
-            16% { color: orange; }
-            33% { color: yellow; }
-            50% { color: green; }
-            66% { color: blue; }
-            83% { color: indigo; }
-            100% { color: violet; }
-        }
-
-        .footer span {
-            animation: textRainbow 3s infinite;
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Portfolio | Nama Lengkap</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+:root{--accent:#0066ff;--bg:#f5f7ff;--card:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:var(--bg);color:#222;}
+header{background:var(--card);padding:1rem 2rem;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+nav{display:flex;justify-content:space-between;align-items:center;font-weight:600;}
+.logo{color:var(--accent);font-size:1.4rem;}
+.menu{display:flex;gap:2rem;list-style:none;cursor:pointer;}
+.menu li:hover{color:var(--accent);}
+section{padding:3rem 2rem;max-width:1000px;margin:auto;display:none;animation:fade .5s forwards;}
+section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+h2{margin-bottom:1.5rem;}
+/* HOME */
+.profile{display:flex;gap:2rem;align-items:center;flex-wrap:wrap;}
+.profile img{width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid var(--accent);}
+.socials a{margin-right:.8rem;color:#555;font-size:1.3rem;transition:.3s;}
+.socials a:hover{color:var(--accent);}
+.projects{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+.card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.card img{width:100%;height:160px;object-fit:cover;}
+.card-body{padding:1rem;}
+.skills span{background:#e4ecff;padding:.4rem .8rem;border-radius:20px;font-size:.8rem;margin:.2rem;display:inline-block;}
+/* FILES */
+.file-list li{background:var(--card);margin:.5rem 0;padding:1rem;border-radius:8px;display:flex;align-items:center;gap:.75rem;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+.file-list button{background:var(--accent);color:#fff;border:none;padding:.5rem .9rem;border-radius:4px;font-size:.8rem;cursor:pointer;}
+#uploadForm{display:flex;gap:.5rem;margin-bottom:1rem;}
+#uploadForm input[type=password]{width:150px;padding:.5rem;}
+#uploadForm input[type=file]{flex:1;}
+/* TOOLS */
+.tool-section{background:var(--card);padding:1.5rem;border-radius:12px;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+input[type=text],input[type=number],input[type=color]{padding:.5rem;border:1px solid #ccc;border-radius:4px;margin:.3rem 0;}
+button{background:var(--accent);color:#fff;border:none;padding:.6rem 1rem;border-radius:4px;cursor:pointer;}
+footer{text-align:center;padding:1rem;color:#666;font-size:.85rem;}
+</style>
 </head>
 <body>
-    <!-- Payment Section -->
-    <div class="overlay">
-        <div class="container">
-            <h1>PAYMENT FAANZY</h1>
 
-            <!-- Payment Methods -->
-            <div class="payment-method dana" onclick="copyText('082281704226')">
-                <span>💳 DANA: 082281704226 🏦</span>
-                <img src="https://files.catbox.moe/x1tw8u.jpeg" alt="DANA" style="width: 40px; height: 40px;">
-            </div>
-            <div class="payment-method gopay" onclick="copyText('082281704226')">
-                <span>💳 GOPAY: 082281704226 🚀✨</span>
-                <img src="https://files.catbox.moe/3gig7z.jpg" alt="Gopay" style="width: 40px; height: 40px;">
-            </div>
-            <div class="payment-method ovo" onclick="copyText('082281704226')">
-                <span>💳 OVO: 082281704226 🌟💎</span>
-                <img src="https://files.catbox.moe/pczy7t.jpg" alt="OVO" style="width: 40px; height: 40px;">
-            </div>
-            <div class="payment-method qris" onclick="openModal('https://files.catbox.moe/2ppy45.jpg')">
-                <span>📱 QRIS: Scan & Pay 📷💵</span>
-                <img src="https://files.catbox.moe/2ppy45.jpg" alt="QRIS" style="width: 40px; height: 40px;">
-            </div>
+<header>
+<nav>
+<div class="logo">Nama Lengkap</div>
+<ul class="menu">
+<li onclick="show('home')">Home</li>
+<li onclick="show('files')">Files</li>
+<li onclick="show('tools')">Tools</li>
+</ul>
+</nav>
+</header>
 
-            <!-- Important Note -->
-            <div class="important-note">
-                JANGAN LUPA UNTUK MENGIRIM BUKTI TRANSFER
-            </div>
+<!-- HOME -->
+<section id="home" class="active">
+<div class="profile">
+<img src="https://via.placeholder.com/200" alt="Foto Profil">
+<div>
+<h1>Nama Lengkap</h1>
+<div class="socials">
+<a href="https://github.com/username" target="_blank"><i class="fab fa-github"></i></a>
+<a href="https://instagram.com/username" target="_blank"><i class="fab fa-instagram"></i></a>
+<a href="https://tiktok.com/@username" target="_blank"><i class="fab fa-tiktok"></i></a>
+</div>
+<p style="margin-top:.5rem;">Web Developer | React • Node.js • UI/UX</p>
+</div>
+</div>
 
-            <!-- Audio Player -->
-            <div style="margin-top: 30px;">
-                <h2>🎵 Lagu Favorit</h2>
-                <audio controls autoplay loop>
-                    <source src="https://files.catbox.moe/i2iv4x.mp3" type="audio/mpeg">
-                    Browser Anda tidak mendukung elemen audio.
-                </audio>
-            </div>
-        </div>
-    </div>
+<h2 style="margin-top:2rem;">Projects</h2>
+<div class="projects">
+<div class="card">
+<img src="https://picsum.photos/600/400?1" alt="proj1">
+<div class="card-body">
+<h3>E-Commerce Landing</h3>
+<p>Toko online modern dengan Next.js & Tailwind.</p>
+<a href="https://github.com/username/proj1" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
+</div>
+</div>
+<div class="card">
+<img src="https://picsum.photos/600/400?2" alt="proj2">
+<div class="card-body">
+<h3>Task Manager App</h3>
+<p>CRUD realtime menggunakan Firebase.</p>
+<a href="https://github.com/username/proj2" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
+</div>
+</div>
+<div class="card">
+<img src="https://picsum.photos/600/400?3" alt="proj3">
+<div class="card-body">
+<h3>Weather Dashboard</h3>
+<p>Cuaca live dengan data OpenWeatherMap API.</p>
+<a href="https://github.com/username/proj3" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
+</div>
+</div>
+</div>
 
-    <!-- Modal for QRIS -->
-    <div id="qrisModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content">
-        <a id="downloadQRIS" download="QRIS-Payment.jpg" class="download-button">💾 Download QRIS</a>
-    </div>
+<h2 style="margin-top:2rem;">Skills</h2>
+<div class="skills">
+<span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>TypeScript</span>
+<span>React</span><span>Next.js</span><span>Node.js</span><span>Express</span>
+<span>MongoDB</span><span>Git</span><span>Tailwind</span><span>Figma</span>
+</div>
+</section>
 
-    <!-- Success Notification -->
-    <div class="copy-notification" id="copyNotification">
-        <span class="checkmark">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark-circle" cx="26" cy="26" r="25"/>
-                <path class="checkmark-check" fill="none" d="M14 27l10 10L39 16"/>
-            </svg>
-        </span>
-        <p>Tersalin!</p>
-    </div>
+<!-- FILES -->
+<section id="files">
+<h2>File Manager</h2>
 
-    <!-- Snowflakes -->
-    <div id="snowflakes"></div>
+<!-- Upload hanya bisa diakses dengan password -->
+<div id="uploadForm">
+<input type="password" id="passInput" placeholder="Password Upload">
+<input type="file" id="fileInput">
+<button onclick="uploadFile()">Upload</button>
+</div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <span>🌟 Website by Faanzy Market - Contact: 082281704226 🌟</span>
-    </div>
+<ul class="file-list" id="fileList"></ul>
+</section>
 
-    <script>
-        // Copy Text Function
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const copyNotification = document.getElementById('copyNotification');
-                copyNotification.style.display = 'flex';
-                setTimeout(() => {
-                    copyNotification.style.display = 'none';
-                }, 3000);
-            });
-        }
+<!-- TOOLS -->
+<section id="tools">
+<h2>Tools</h2>
 
-        // Modal Functions
-        function openModal(imageSrc) {
-            const modal = document.getElementById("qrisModal");
-            const modalImage = document.getElementById("modalImage");
-            const downloadLink = document.getElementById("downloadQRIS");
-            modal.style.display = "block";
-            modalImage.src = imageSrc;
-            downloadLink.href = imageSrc;
-        }
+<!-- Kalkulator -->
+<div class="tool-section">
+<h3>Kalkulator</h3>
+<input type="text" id="calcInput" placeholder="contoh: 3*(2+5)" style="width:200px"/>
+<button onclick="calcResult()">Hitung</button>
+<p id="calcOutput" style="margin-top:.5rem;font-weight:600;"></p>
+</div>
 
-        function closeModal() {
-            document.getElementById("qrisModal").style.display = "none";
-        }
+<!-- Color Picker -->
+<div class="tool-section">
+<h3>Color Picker</h3>
+<input type="color" id="colorPicker" value="#0066ff"/>
+<span id="colorHex" style="margin-left:1rem;font-weight:600;">#0066ff</span>
+</div>
 
-        // Snowflake Animation
-        function createSnowflakes() {
-            const snowflake = document.createElement('div');
-            snowflake.className = 'snowflake';
-            snowflake.textContent = '❄';
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.opacity = Math.random();
-            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-            document.body.appendChild(snowflake);
+<!-- Stopwatch -->
+<div class="tool-section">
+<h3>Stopwatch</h3>
+<p id="swDisplay" style="font-size:1.5rem;font-weight:600;">00:00:00</p>
+<button onclick="swStart()">Start</button>
+<button onclick="swPause()">Pause</button>
+<button onclick="swReset()">Reset</button>
+</div>
 
-            setTimeout(() => {
-                snowflake.remove();
-            }, 5000);
-        }
+<!-- QR Generator -->
+<div class="tool-section">
+<h3>QR Generator</h3>
+<input type="text" id="qrText" placeholder="Masukkan teks / link" style="width:250px"/>
+<button onclick="genQR()">Generate</button>
+<div id="qrResult"></div>
+</div>
+</section>
 
-        setInterval(createSnowflakes, 100);
-    </script>
+<footer>&copy; 2025 Nama Lengkap - All rights reserved</footer>
+
+<script>
+// --- Navigasi Tab
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// --- CONFIG
+const UPLOAD_PASSWORD = 'rahasia123'; // Ganti password di sini
+
+// --- Files (tersimpan di localStorage)
+let storedFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
+
+function refreshFileList(){
+  const list = document.getElementById('fileList');
+  list.innerHTML='';
+  storedFiles.forEach((file, idx)=>{
+    const li=document.createElement('li');
+    li.innerHTML = `
+      <span><i class="fas fa-file-download"></i> ${file.name}</span>
+      <button onclick="downloadStoredFile(${idx})">Download</button>`;
+    list.appendChild(li);
+  });
+}
+refreshFileList();
+
+function uploadFile(){
+  const pass = document.getElementById('passInput').value;
+  const fileInput = document.getElementById('fileInput');
+  if(pass !== UPLOAD_PASSWORD){
+    alert('Password salah!');
+    return;
+  }
+  if(!fileInput.files.length){
+    alert('Pilih file dulu');
+    return;
+  }
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = e=>{
+    storedFiles.push({name: file.name, data: e.target.result});
+    localStorage.setItem('myFiles', JSON.stringify(storedFiles));
+    refreshFileList();
+    document.getElementById('fileInput').value='';
+    document.getElementById('passInput').value='';
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadStoredFile(idx){
+  const {name, data} = storedFiles[idx];
+  const a=document.createElement('a');
+  a.href=data;
+  a.download=name;
+  a.click();
+}
+
+// --- Color Picker
+const cp=document.getElementById('colorPicker');
+const hex=document.getElementById('colorHex');
+cp.addEventListener('input',()=>hex.textContent=cp.value);
+
+// --- Kalkulator
+function calcResult(){
+  try{
+    document.getElementById('calcOutput').textContent=eval(document.getElementById('calcInput').value);
+  }catch(e){
+    document.getElementById('calcOutput').textContent='Error';
+  }
+}
+
+// --- Stopwatch
+let swInterval=null, swTime=0;
+function swUpdate(){
+  const hrs=String(Math.floor(swTime/3600)).padStart(2,'0');
+  const mins=String(Math.floor((swTime%3600)/60)).padStart(2,'0');
+  const secs=String(swTime%60).padStart(2,'0');
+  document.getElementById('swDisplay').textContent=`${hrs}:${mins}:${secs}`;
+}
+function swStart(){ if(!swInterval) swInterval=setInterval(()=>{swTime++;swUpdate()},1000); }
+function swPause(){ clearInterval(swInterval); swInterval=null; }
+function swReset(){ swPause(); swTime=0; swUpdate(); }
+
+// --- QR Generator
+function genQR(){
+  const text=document.getElementById('qrText').value.trim();
+  if(!text) return alert('Isi teks dulu');
+  document.getElementById('qrResult').innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}"/>`;
+}
+</script>
 </body>
 </html>
