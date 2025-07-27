@@ -32,7 +32,7 @@ h2{margin-bottom:1.5rem;}
 /* FILES */
 .file-list li{background:var(--card);margin:.5rem 0;padding:1rem;border-radius:8px;display:flex;align-items:center;gap:.75rem;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.05);}
 .file-list button{background:var(--accent);color:#fff;border:none;padding:.5rem .9rem;border-radius:4px;font-size:.8rem;cursor:pointer;}
-#uploadForm{display:flex;gap:.5rem;margin-bottom:1rem;}
+#uploadForm{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
 #uploadForm input[type=password]{width:150px;padding:.5rem;}
 #uploadForm input[type=file]{flex:1;}
 /* TOOLS */
@@ -57,6 +57,7 @@ footer{text-align:center;padding:1rem;color:#666;font-size:.85rem;}
 
 <!-- HOME -->
 <section id="home" class="active">
+<!-- (isi portfolio sama seperti sebelumnya) -->
 <div class="profile">
 <img src="https://via.placeholder.com/200" alt="Foto Profil">
 <div>
@@ -66,36 +67,15 @@ footer{text-align:center;padding:1rem;color:#666;font-size:.85rem;}
 <a href="https://instagram.com/username" target="_blank"><i class="fab fa-instagram"></i></a>
 <a href="https://tiktok.com/@username" target="_blank"><i class="fab fa-tiktok"></i></a>
 </div>
-<p style="margin-top:.5rem;">Web Developer | React • Node.js • UI/UX</p>
+<p>Web Developer | React • Node.js • UI/UX</p>
 </div>
 </div>
 
 <h2 style="margin-top:2rem;">Projects</h2>
 <div class="projects">
-<div class="card">
-<img src="https://picsum.photos/600/400?1" alt="proj1">
-<div class="card-body">
-<h3>E-Commerce Landing</h3>
-<p>Toko online modern dengan Next.js & Tailwind.</p>
-<a href="https://github.com/username/proj1" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
-</div>
-</div>
-<div class="card">
-<img src="https://picsum.photos/600/400?2" alt="proj2">
-<div class="card-body">
-<h3>Task Manager App</h3>
-<p>CRUD realtime menggunakan Firebase.</p>
-<a href="https://github.com/username/proj2" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
-</div>
-</div>
-<div class="card">
-<img src="https://picsum.photos/600/400?3" alt="proj3">
-<div class="card-body">
-<h3>Weather Dashboard</h3>
-<p>Cuaca live dengan data OpenWeatherMap API.</p>
-<a href="https://github.com/username/proj3" target="_blank" style="color:var(--accent)">GitHub &rarr;</a>
-</div>
-</div>
+<div class="card"><img src="https://picsum.photos/600/400?1" alt="proj1"><div class="card-body"><h3>E-Commerce Landing</h3><p>Next.js & Tailwind</p></div></div>
+<div class="card"><img src="https://picsum.photos/600/400?2" alt="proj2"><div class="card-body"><h3>Task Manager</h3><p>Firebase realtime</p></div></div>
+<div class="card"><img src="https://picsum.photos/600/400?3" alt="proj3"><div class="card-body"><h3>Weather Dashboard</h3><p>OpenWeatherMap API</p></div></div>
 </div>
 
 <h2 style="margin-top:2rem;">Skills</h2>
@@ -110,7 +90,7 @@ footer{text-align:center;padding:1rem;color:#666;font-size:.85rem;}
 <section id="files">
 <h2>File Manager</h2>
 
-<!-- Upload hanya bisa diakses dengan password -->
+<!-- Upload (password) -->
 <div id="uploadForm">
 <input type="password" id="passInput" placeholder="Password Upload">
 <input type="file" id="fileInput">
@@ -160,21 +140,24 @@ footer{text-align:center;padding:1rem;color:#666;font-size:.85rem;}
 <footer>&copy; 2025 Nama Lengkap - All rights reserved</footer>
 
 <script>
-// --- Navigasi Tab
+const UPLOAD_PASSWORD = 'rahasia123';   // Ganti jika perlu
+
+// Navigasi tab
 function show(id){
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// --- CONFIG
-const UPLOAD_PASSWORD = 'rahasia123'; // Ganti password di sini
-
-// --- Files (tersimpan di localStorage)
+// --- File Manager (persisten + public download)
 let storedFiles = JSON.parse(localStorage.getItem('myFiles') || '[]');
 
 function refreshFileList(){
   const list = document.getElementById('fileList');
   list.innerHTML='';
+  if(storedFiles.length === 0){
+    list.innerHTML='<li>Belum ada file.</li>';
+    return;
+  }
   storedFiles.forEach((file, idx)=>{
     const li=document.createElement('li');
     li.innerHTML = `
@@ -202,7 +185,7 @@ function uploadFile(){
     storedFiles.push({name: file.name, data: e.target.result});
     localStorage.setItem('myFiles', JSON.stringify(storedFiles));
     refreshFileList();
-    document.getElementById('fileInput').value='';
+    fileInput.value='';
     document.getElementById('passInput').value='';
   };
   reader.readAsDataURL(file);
